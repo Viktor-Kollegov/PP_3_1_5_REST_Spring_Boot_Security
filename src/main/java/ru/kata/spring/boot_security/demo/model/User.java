@@ -26,10 +26,10 @@ public class User implements UserDetails {
     private String lastName;
     @Column
     private String email;
-    @Size(min=2, message = "Не меньше 4 символов")
+    @Size(min=2, message = "Не меньше 4 символов") // не работает
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-    @Size(min=2, message = "Не меньше 4 символов")
+    @Size(min=2, message = "Не меньше 4 символов") // не работает
     @Column(nullable = false)
     private String password;
     @Transient

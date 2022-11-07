@@ -19,28 +19,30 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    @GetMapping("/users/signup")
+    @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userForm", new User());
 
         return "registration";
     }
 
-    @PostMapping("/users/signup")
+    @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) { // не работает
             return "registration";
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
-            model.addAttribute("passwordError", "Пароли не совпадают");
+            model.addAttribute("error", "Пароли не совпадают");
             return "registration";
         }
         if (!userService.saveUser(userForm)){
-            model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
+            model.addAttribute("error", "Пользователь с таким именем уже существует");
             return "registration";
         }
 
-        return "redirect:/";
+        userService.saveUser(userForm);
+
+        return "redirect:/login";
     }
 }
