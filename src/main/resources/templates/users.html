@@ -83,11 +83,13 @@
     <button type="button" class="btn btn-danger float-md-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Clear the table
     </button>
-    <div class="row">
-        <div class="col-lg-3">
-            <form th:action="@{/admin/logout}" th:object="${users}" class="btn btn-primary btn-sm mb-3" method="POST">Log out</form>
-        </div>
-    </div>
+
+    <form th:action="@{/admin/logout}" class="btn btn-info btn-lg" method="POST">
+        <span class="glyphicon glyphicon-log-out">
+            <input type="submit" value="Logout"/>
+        </span>
+    </form>
+
 </div>
 </body>
 </html>

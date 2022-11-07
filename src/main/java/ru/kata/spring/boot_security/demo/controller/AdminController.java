@@ -48,14 +48,12 @@ public class AdminController {
     public String updateUser(User UpdatedUser) {
         //Получаем объект через действие в форме методом POST
         //Имя переменной задаём здесь произвольно
-        //И хотя в методах id не нужен, без него у нас каждый раз просто
-        //создается новый объект, почему - пока непонятно
         userService.updateUser(UpdatedUser);
         return "redirect:/admin";
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteUser(User userToDelete) { //Убираем @PathVariable int id,
+    public String deleteUser(User userToDelete) {
         // и достаём через действие методом POST самого юзера
         //Имя переменной задаём здесь произвольно
         userService.removeUser(userToDelete);
