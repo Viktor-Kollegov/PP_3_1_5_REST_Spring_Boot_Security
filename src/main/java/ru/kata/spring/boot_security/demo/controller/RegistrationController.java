@@ -29,7 +29,7 @@ public class RegistrationController {
     @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
 
-        if (bindingResult.hasErrors()) { // не работает
+        if (bindingResult.hasErrors()) { // не работает по длине строки, почему?!
             return "registration";
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){

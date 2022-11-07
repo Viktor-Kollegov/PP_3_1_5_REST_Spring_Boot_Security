@@ -26,15 +26,15 @@ public class User implements UserDetails {
     private String lastName;
     @Column
     private String email;
-    @Size(min=2, message = "Не меньше 4 символов") // не работает
+    @Size(min=4, message = "Не меньше 4 символов") // не работает
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-    @Size(min=2, message = "Не меньше 4 символов") // не работает
+    @Size(min=4, message = "Не меньше 4 символов") // не работает
     @Column(nullable = false)
     private String password;
     @Transient
     private String passwordConfirm;
-    @ManyToMany(fetch = FetchType.EAGER) // без этого логина не происходит, не подтягиваются роли
+    @ManyToMany //(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @Override

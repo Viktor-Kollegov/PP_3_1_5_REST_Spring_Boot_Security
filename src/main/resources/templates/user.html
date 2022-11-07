@@ -49,7 +49,7 @@
                     </div>
 
                     <div class ="form-group">
-                        <label> username </label>
+                        <label> Username </label>
                         <input
                                 type = "text"
                                 readonly = "readonly"
@@ -72,13 +72,24 @@
                         />
                     </div>
 
+                    <div class ="form-group">
+                        <label> Role </label>
+                        <input
+                                type = "text"
+                                readonly = "readonly"
+                                name = "Role"
+                                th:field = "*{roles}"
+                                class = "form-control"
+                        />
+                    </div>
+
                 </form>
 
             </div>
         </div>
     </div>
 </div>
-<form th:action="@{/admin/logout}" class="btn btn-info btn-lg" method="POST">
+<form th:action="@{/user/logout}" class="btn btn-info btn-lg" method="POST">
     <input class="glyphicon glyphicon-log-out" type="submit" value="Logout"/>
 </form>
 </body>

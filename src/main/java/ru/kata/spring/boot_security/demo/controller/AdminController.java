@@ -52,6 +52,17 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+//    @PostMapping("/promote/{id}") // не работает, getRoles возвращает null
+//    public String promoteUserToAdmin(User userToPromote) {
+//        // и достаём через действие методом POST самого юзера
+//        //Имя переменной задаём здесь произвольно
+//        Set<Role> newRoleSet = userToPromote.getRoles(); // null
+//        newRoleSet.add(new Role(1L, "ROLE_ADMIN"));
+//        userToPromote.setRoles(userToPromote.getRoles());
+//        userService.saveUser(userToPromote);
+//        return "redirect:/admin";
+//    }
+
     @PostMapping("/delete/{id}")
     public String deleteUser(User userToDelete) {
         // и достаём через действие методом POST самого юзера

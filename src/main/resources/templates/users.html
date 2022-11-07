@@ -56,6 +56,7 @@
                 <th> First Name</th>
                 <th> Last Name</th>
                 <th> Email</th>
+                <th> Role</th>
                 <th> Actions</th>
             </tr>
             </thead>
@@ -65,11 +66,16 @@
                 <td th:text="${user.firstName}"></td>
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.email}"></td>
+                <th:block th:each="role : ${user.roles}">
+                    <td th:text="${role}"></td>
+                </th:block>
                 <td>
                     <div class="btn-toolbar">
                         <a th:href="@{/admin/edit/{id}(id=${user.id})}"
                            class="btn btn-primary mx-2">Update</a>
-
+<!--                        <form th:action="@{/admin/promote/{id}(id=${user.id})}" th:object="${user}" method="POST">-->
+<!--                            <button type="submit" class="btn btn-primary mx-2">Make Admin</button>-->
+<!--                        </form>-->
                         <form th:action="@{/admin/delete/{id}(id=${user.id})}" th:object="${user}" method="POST">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
