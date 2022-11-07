@@ -13,6 +13,8 @@ public interface UserService {
 
     void updateUser(User updatedUser);
 
+    User findByUsername(String username);
+
     Optional<User> findUserById(Long id);
 
     List<User> getAllUsers();
