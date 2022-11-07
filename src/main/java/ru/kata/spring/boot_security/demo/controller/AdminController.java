@@ -63,7 +63,7 @@ public class AdminController {
 //        return "redirect:/admin";
 //    }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteUser(User userToDelete) {
         // и достаём через действие методом POST самого юзера
         //Имя переменной задаём здесь произвольно
@@ -71,7 +71,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/clear")
+    @DeleteMapping("/clear")
     public String ClearTheTable() {
         userService.cleanUsersTable();
         return "redirect:/admin";

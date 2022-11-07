@@ -26,7 +26,7 @@
         <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
             <h1 class = "text-center"> Create New User </h1>
             <div class = "card-body">
-                <form th:action="@{/admin}" th:object = "${user}" method="POST">
+                <form th:action="@{/admin}" th:object = "${user}" th:method="POST">
                     <div class ="form-group">
                         <label> User First Name </label>
                         <input
@@ -93,7 +93,7 @@
         </div>
     </div>
 </div>
-<form th:action="@{/admin/logout}" class="btn btn-info btn-lg" method="POST">
+<form th:action="@{/admin/logout}" class="btn btn-info btn-lg" th:method="POST">
     <input class="glyphicon glyphicon-log-out" type="submit" value="Logout"/>
 </form>
 </body>
