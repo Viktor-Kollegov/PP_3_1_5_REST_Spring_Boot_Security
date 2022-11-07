@@ -68,5 +68,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @PostMapping("/logout")
+    public String logout() {
+        return "redirect:/logout";
+    }
+
 }
 
