@@ -67,7 +67,7 @@
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.email}"></td>
                 <th:block th:each="role : ${user.roles}">
-                    <td th:text="${role}"></td>
+                    <td th:text="${role.getName()}"></td>
                 </th:block>
                 <td>
                     <div class="btn-toolbar">
