@@ -24,6 +24,7 @@ public class DBInit {
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
+
     @PostConstruct
     public void RolesInit() {
         Role adminRole = new Role(1L, "ROLE_ADMIN");
@@ -38,31 +39,35 @@ public class DBInit {
 
     public boolean makeAdmin() {
         User user = userRepository.findByUsername("admin");
-
         if (user != null) {
             return false;
         }
-
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN")));
-        admin.setPassword(bCryptPasswordEncoder.encode("admin"));
+        User admin = User.builder()
+                .firstName("Peter")
+                .lastName("Wallis")
+                .email("test@mail.ru")
+                .password(bCryptPasswordEncoder.encode("admin"))
+                .roles(Collections.singleton(new Role(1L, "ROLE_ADMIN")))
+                .username("admin")
+                .build();
         userRepository.save(admin);
         return true;
     }
 
     public boolean makeTestUser() {
         User user = userRepository.findByUsername("user");
-
         if (user != null) {
             return false;
         }
-
-        User TestUser = new User();
-        TestUser.setUsername("user");
-        TestUser.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
-        TestUser.setPassword(bCryptPasswordEncoder.encode("user"));
-        userRepository.save(TestUser);
+        User testUser = User.builder()
+                .firstName("John")
+                .lastName("Titor")
+                .email("test2@mail.ru")
+                .password(bCryptPasswordEncoder.encode("user"))
+                .roles(Collections.singleton(new Role(2L, "ROLE_USER")))
+                .username("user")
+                .build();
+        userRepository.save(testUser);
         return true;
     }
 }

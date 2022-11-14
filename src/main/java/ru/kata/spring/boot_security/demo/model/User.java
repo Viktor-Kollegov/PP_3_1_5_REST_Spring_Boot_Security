@@ -3,7 +3,6 @@ package ru.kata.spring.boot_security.demo.model;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,8 +13,9 @@ import java.util.Set;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
-@Validated
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
