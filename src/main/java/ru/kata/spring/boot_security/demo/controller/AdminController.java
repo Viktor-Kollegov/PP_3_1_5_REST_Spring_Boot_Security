@@ -65,6 +65,9 @@ public class AdminController {
             model.addAttribute("error", "The entered password pair does not match");
             return "edit_users";
         } else if (bCryptPasswordEncoder.matches(previousPassword, UpdatedUser.getPassword())) {
+            if (newPassword.length() == 0) {
+                newPassword = previousPassword;
+            }
             UpdatedUser.setPassword(newPassword);
             userService.updateUser(UpdatedUser);
         } else {
