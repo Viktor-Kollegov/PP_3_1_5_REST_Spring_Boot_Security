@@ -1,72 +1,81 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import javax.validation.Valid;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
     private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @GetMapping()
     public String printWelcome(ModelMap modelMap) {
         modelMap.addAttribute("users", userService.getAllUsers());
-        //Создаём атрибут users для работы с ним на странице users.html
         return "users";
     }
 
     @GetMapping(value = "/new")
     public String newUser(@ModelAttribute("user") User user) {
-        //@ModelAttribute даёт доступ к экземпляру на странице создания
         return "create_users";
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") User user) {
-        //Здесь же @ModelAttribute возвращает доступ обратно в контроллер
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "create_users";
+        }
         userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/edit/{id}")
     public String editUserForm(@PathVariable Long id, Model model) {
-        userService.findUserById(id).ifPresent(userToUpdate -> model
-                .addAttribute("userToUpdate", userToUpdate));
-        //С заданным атрибутом работаем на странице edit_users.html
+        if (!model.containsAttribute("userToUpdate")) {
+            userService.findUserById(id).ifPresent(userToUpdate ->
+                    model.addAttribute("userToUpdate", userToUpdate));
+        }
         return "edit_users";
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(User UpdatedUser) {
-        //Получаем объект через действие в форме методом POST
-        //Имя переменной задаём здесь произвольно
-        userService.updateUser(UpdatedUser);
+    public String updateUser(@RequestParam("newPassword") String newPassword,
+                             @RequestParam("passwordConfirm") String passwordConfirm,
+                             @RequestParam("previousPassword") String previousPassword,
+                             @ModelAttribute("userToUpdate") @Valid User UpdatedUser,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            return "edit_users";
+        } else if (!Objects.equals(passwordConfirm, newPassword)) {
+            model.addAttribute("error", "The entered password pair does not match");
+            return "edit_users";
+        } else if (bCryptPasswordEncoder.matches(previousPassword, UpdatedUser.getPassword())) {
+            UpdatedUser.setPassword(newPassword);
+            userService.updateUser(UpdatedUser);
+        } else {
+            model.addAttribute("error", "Current password mismatch");
+            return "edit_users";
+        }
         return "redirect:/admin";
     }
 
-//    @PostMapping("/promote/{id}") // не работает, getRoles возвращает null
-//    public String promoteUserToAdmin(User userToPromote) {
-//        // и достаём через действие методом POST самого юзера
-//        //Имя переменной задаём здесь произвольно
-//        Set<Role> newRoleSet = userToPromote.getRoles(); // null
-//        newRoleSet.add(new Role(1L, "ROLE_ADMIN"));
-//        userToPromote.setRoles(userToPromote.getRoles());
-//        userService.saveUser(userToPromote);
-//        return "redirect:/admin";
-//    }
-
     @DeleteMapping("/delete/{id}")
     public String deleteUser(User userToDelete) {
-        // и достаём через действие методом POST самого юзера
-        //Имя переменной задаём здесь произвольно
         userService.removeUser(userToDelete);
         return "redirect:/admin";
     }
@@ -77,10 +86,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/logout")
-    public String logout() {
-        return "redirect:/logout";
-    }
+    //С этим методом выводится окно с уточнением, действительно ли мы хотим разлогиниться.
+//    @PostMapping("/logout")
+//    public String logout() {
+//        return "redirect:/logout";
+//    }
 
 }
 

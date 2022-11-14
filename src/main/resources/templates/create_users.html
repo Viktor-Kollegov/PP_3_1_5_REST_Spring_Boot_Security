@@ -27,6 +27,7 @@
             <h1 class = "text-center"> Create New User </h1>
             <div class = "card-body">
                 <form th:action="@{/admin}" th:object = "${user}" th:method="POST">
+                    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</div>
                     <div class ="form-group">
                         <label> User First Name </label>
                         <input
@@ -38,6 +39,7 @@
                         />
                     </div>
 
+                    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name error</div>
                     <div class ="form-group">
                         <label> User Last Name </label>
                         <input
@@ -49,6 +51,7 @@
                         />
                     </div>
 
+                    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
                     <div class ="form-group">
                         <label> User Email </label>
                         <input
@@ -60,6 +63,7 @@
                         />
                     </div>
 
+                    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
                     <div class ="form-group">
                         <label> Username </label>
                         <input
@@ -71,6 +75,7 @@
                         />
                     </div>
 
+                    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
                     <div class ="form-group">
                         <label> Password </label>
                         <input

@@ -3,7 +3,6 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -26,9 +25,10 @@ public class UserController {
         return "user";
     }
 
-    @PostMapping("/logout")
-    public String logout() {
-        return "redirect:/logout";
-    }
+    //С этим методом выводится сообщение с уточнением, действительно ли мы хотим разлогиниться.
+//    @PostMapping("/logout")
+//    public String logout() {
+//        return "redirect:/logout";
+//    }
 
 }

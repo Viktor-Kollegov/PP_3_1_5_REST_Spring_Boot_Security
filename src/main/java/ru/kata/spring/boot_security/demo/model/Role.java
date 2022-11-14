@@ -20,14 +20,8 @@ public class Role implements GrantedAuthority {
     private String name;
     @Transient
     @ManyToMany(mappedBy = "roles")
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "roles_id"))
     @ToString.Exclude
     private Set<User> users;
-
-    public Role(Long id) {
-        this.id = id;
-    }
 
     public Role(Long id, String name) {
         this.id = id;
