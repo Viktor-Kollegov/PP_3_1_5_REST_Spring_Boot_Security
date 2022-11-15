@@ -25,18 +25,17 @@ public class DBInit {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @PostConstruct
-    public void RolesInit() {
+    public Set<Role> RolesInit() {
         Role adminRole = new Role(1L, "ROLE_ADMIN");
         Role userRole = new Role(2L, "ROLE_USER");
         Set<Role> roles = new HashSet<>();
         roles.add(adminRole);
         roles.add(userRole);
         roleRepository.saveAll(roles);
-        makeAdmin();
-        makeTestUser();
+        return roles;
     }
 
+    @PostConstruct
     public boolean makeAdmin() {
         User user = userRepository.findByUsername("admin");
         if (user != null) {
@@ -47,13 +46,14 @@ public class DBInit {
                 .lastName("Wallis")
                 .email("test@mail.ru")
                 .password(bCryptPasswordEncoder.encode("admin"))
-                .roles(Collections.singleton(new Role(1L, "ROLE_ADMIN")))
+                .roles(RolesInit())
                 .username("admin")
                 .build();
         userRepository.save(admin);
         return true;
     }
 
+    @PostConstruct
     public boolean makeTestUser() {
         User user = userRepository.findByUsername("user");
         if (user != null) {
