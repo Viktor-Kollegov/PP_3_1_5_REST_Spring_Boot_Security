@@ -32,21 +32,15 @@ public class AdminController {
     public String printWelcome(ModelMap modelMap, Principal principal) {
         modelMap.addAttribute("users", userService.getAllUsers());
         modelMap.addAttribute("admin", userService.findByUsername(principal.getName()));
+        modelMap.addAttribute("newUser", new User()); //для вкладки
+        modelMap.addAttribute("roles", roleRepository.findAll()); //для вкладки
         return "users";
     }
 
-    @GetMapping(value = "/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", roleRepository.findAll());
-        return "create_users";
-    }
-
     @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("roles", roleRepository.findAll());
-            return "create_users";
+            return "redirect:/admin";
         }
         userService.saveUser(user);
         return "redirect:/admin";

@@ -130,11 +130,107 @@
                     </h5>
                 </a>
             </nav>
-            <div class="row">
-                <div class="col-lg-3">
-                    <a th:href="@{admin/new}" class="btn btn-primary btn-sm mb-3">Add User</a>
+<!--            -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+                        <div class="card-body">
+                            <th:block th:each="str : ${errors}">
+                                <h3 th:text="${str}" class="text-center" style="color:red"></h3>
+                            </th:block>
+                            <form th:action="@{/admin}" th:object="${newUser}" th:method="POST">
+                                <div class="form-group">
+                                    <label> First name <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name
+                                        error
+                                    </div> </label>
+                                    <input
+                                            type="text"
+                                            name="firstName"
+                                            th:field="*{firstName}"
+                                            class="form-control"
+                                            placeholder="Enter User First Name"
+                                    />
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label> Last name <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name
+                                        error
+                                    </div> </label>
+                                    <input
+                                            type="text"
+                                            name="lastName"
+                                            th:field="*{lastName}"
+                                            class="form-control"
+                                            placeholder="Enter User Last Name"
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label> Age </label>
+                                    <input
+                                            type="number"
+                                            min="0"
+                                            name="age"
+                                            th:field="*{age}"
+                                            class="form-control"
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label> Email <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+                                    </label>
+                                    <input
+                                            type="text"
+                                            name="email"
+                                            th:field="*{email}"
+                                            class="form-control"
+                                            placeholder="Enter User Email"
+                                    />
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label> Password <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                                        Password error
+                                    </div> </label>
+                                    <input
+                                            type="text"
+                                            name="password"
+                                            th:field="*{password}"
+                                            class="form-control"
+                                            placeholder="Enter password"
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label> Role <div style="color:red" th:if="${#fields.hasErrors('singleRoleId')}" th:errors="*{singleRoleId}"> Role
+                                        error
+                                    </div> </label>
+                                    <select th:size="${roles.size()}" name="singleRoleId" >
+                                        <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getProperName()}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-primary">
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
             </div>
+<!--            -->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-3">-->
+<!--                    <a th:href="@{admin/new}" class="btn btn-primary btn-sm mb-3">Add User</a>-->
+<!--                </div>-->
+<!--            </div>-->
+
         </div>
     </div>
 
