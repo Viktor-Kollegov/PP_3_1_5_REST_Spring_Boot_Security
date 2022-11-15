@@ -11,7 +11,7 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -41,8 +41,9 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleRepository.findAll());
             return "create_users";
         }
         userService.saveUser(user);
@@ -55,6 +56,7 @@ public class AdminController {
             userService.findUserById(id).ifPresent(userToUpdate ->
                     model.addAttribute("userToUpdate", userToUpdate));
         }
+        model.addAttribute("roles", roleRepository.findAll());
         return "edit_users";
     }
 
@@ -65,6 +67,7 @@ public class AdminController {
                              @ModelAttribute("userToUpdate") @Valid User UpdatedUser,
                              BindingResult bindingResult,
                              Model model) {
+        model.addAttribute("roles", roleRepository.findAll());
         if (bindingResult.hasErrors()) {
             return "edit_users";
         } else if (!Objects.equals(passwordConfirm, newPassword)) {

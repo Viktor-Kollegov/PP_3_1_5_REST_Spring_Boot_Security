@@ -48,6 +48,7 @@ public class DBInit {
                 .password(bCryptPasswordEncoder.encode("admin"))
                 .roles(RolesInit())
                 .age(26)
+                .singleRoleId(1L)
                 .build();
         userRepository.save(admin);
         return true;
@@ -66,6 +67,7 @@ public class DBInit {
                 .password(bCryptPasswordEncoder.encode("user"))
                 .roles(Collections.singleton(new Role(2L, "ROLE_USER")))
                 .age(16)
+                .singleRoleId(2L)
                 .build();
         userRepository.save(testUser);
         return true;

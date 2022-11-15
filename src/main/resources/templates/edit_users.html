@@ -30,9 +30,8 @@
                     <h3 th:text="${str}" class="text-center" style="color:red"></h3>
                 </th:block>
                 <form th:action="@{/admin/update/{id}(id=${userToUpdate.id})}" th:object = "${userToUpdate}" th:method="POST">
-                    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</div>
                     <div class ="form-group">
-                        <label> User First Name </label>
+                        <label> User First Name <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</div> </label>
                         <input
                                 type = "text"
                                 name = "firstName"
@@ -42,9 +41,8 @@
                         />
                     </div>
 
-                    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name error</div>
                     <div class ="form-group">
-                        <label> User Last Name </label>
+                        <label> User Last Name <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name error</div> </label>
                         <input
                                 type = "text"
                                 name = "lastName"
@@ -54,9 +52,19 @@
                         />
                     </div>
 
-                    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+                    <div class="form-group">
+                        <label> Age </label>
+                        <input
+                                type="number"
+                                min="0"
+                                name="age"
+                                th:field="*{age}"
+                                class="form-control"
+                        />
+                    </div>
+
                     <div class = "form-group">
-                        <label> User Email </label>
+                        <label> User Email <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div> </label>
                         <input
                                 type = "text"
                                 name = "email"
@@ -108,14 +116,13 @@
                     </div>
 
                     <div class ="form-group">
-                        <label> Role </label>
-                        <input
-                                type = "text"
-                                readonly = "readonly"
-                                name = "Role"
-                                th:field = "*{roles}"
-                                class = "form-control"
-                        />
+                        <label> Role <div style="color:red" th:if="${#fields.hasErrors('singleRoleId')}" th:errors="*{singleRoleId}"> Role
+                            error
+                        </div> </label>
+                        <select th:size="${roles.size()}" name="singleRoleId" >
+                            <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getName()}">
+                            </option>
+                        </select>
                     </div>
 
                     <div class = "box-footer">

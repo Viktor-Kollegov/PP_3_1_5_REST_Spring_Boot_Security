@@ -28,11 +28,10 @@
             <h1 class="text-center"> Create New User </h1>
             <div class="card-body">
                 <form th:action="@{/admin}" th:object="${user}" th:method="POST">
-                    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name
-                        error
-                    </div>
                     <div class="form-group">
-                        <label> First name </label>
+                        <label> First name <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name
+                            error
+                        </div> </label>
                         <input
                                 type="text"
                                 name="firstName"
@@ -42,11 +41,11 @@
                         />
                     </div>
 
-                    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name
-                        error
-                    </div>
+
                     <div class="form-group">
-                        <label> Last name </label>
+                        <label> Last name <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name
+                            error
+                        </div> </label>
                         <input
                                 type="text"
                                 name="lastName"
@@ -67,9 +66,9 @@
                         />
                     </div>
 
-                    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
                     <div class="form-group">
-                        <label> Email </label>
+                        <label> Email <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+                        </label>
                         <input
                                 type="text"
                                 name="email"
@@ -79,11 +78,11 @@
                         />
                     </div>
 
-                    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-                        Password error
-                    </div>
+
                     <div class="form-group">
-                        <label> Password </label>
+                        <label> Password <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                            Password error
+                        </div> </label>
                         <input
                                 type="text"
                                 name="password"
@@ -92,11 +91,13 @@
                                 placeholder="Enter password"
                         />
                     </div>
-
+                    
                     <div class="form-group">
-                        <label> Role </label>
-                        <select th:size="${roles.size()}" multiple name="select-role" >
-                            <option th:each="r : ${roles}" th:value="${r}" th:text="${r.getName()}">
+                        <label> Role <div style="color:red" th:if="${#fields.hasErrors('singleRoleId')}" th:errors="*{singleRoleId}"> Role
+                            error
+                        </div> </label>
+                        <select th:size="${roles.size()}" name="singleRoleId" >
+                            <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getName()}">
                             </option>
                         </select>
                     </div>
