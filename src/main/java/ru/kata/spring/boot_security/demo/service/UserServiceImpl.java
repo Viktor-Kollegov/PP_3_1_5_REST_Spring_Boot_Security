@@ -3,11 +3,9 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +29,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
+        //user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;

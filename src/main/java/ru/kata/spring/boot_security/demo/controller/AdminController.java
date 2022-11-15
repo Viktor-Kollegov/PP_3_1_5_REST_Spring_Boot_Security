@@ -7,6 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
@@ -18,9 +19,12 @@ public class AdminController {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    private final RoleRepository roleRepository;
+
+    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping()
@@ -30,7 +34,9 @@ public class AdminController {
     }
 
     @GetMapping(value = "/new")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", roleRepository.findAll());
         return "create_users";
     }
 

@@ -37,17 +37,17 @@ public class DBInit {
 
     @PostConstruct
     public boolean makeAdmin() {
-        User user = userRepository.findByUsername("admin");
+        User user = userRepository.findByUsername("admin@mail.ru");
         if (user != null) {
             return false;
         }
         User admin = User.builder()
-                .firstName("Peter")
+                .email("admin@mail.ru")
+                .firstName("Paul")
                 .lastName("Wallis")
-                .email("test@mail.ru")
                 .password(bCryptPasswordEncoder.encode("admin"))
                 .roles(RolesInit())
-                .username("admin")
+                .age(26)
                 .build();
         userRepository.save(admin);
         return true;
@@ -55,17 +55,17 @@ public class DBInit {
 
     @PostConstruct
     public boolean makeTestUser() {
-        User user = userRepository.findByUsername("user");
+        User user = userRepository.findByUsername("user@mail.ru");
         if (user != null) {
             return false;
         }
         User testUser = User.builder()
+                .email("user@mail.ru")
                 .firstName("John")
                 .lastName("Titor")
-                .email("test2@mail.ru")
                 .password(bCryptPasswordEncoder.encode("user"))
                 .roles(Collections.singleton(new Role(2L, "ROLE_USER")))
-                .username("user")
+                .age(16)
                 .build();
         userRepository.save(testUser);
         return true;

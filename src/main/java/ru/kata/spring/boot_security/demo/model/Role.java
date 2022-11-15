@@ -21,6 +21,7 @@ public class Role implements GrantedAuthority {
     @Transient
     @ManyToMany(mappedBy = "roles")
     @ToString.Exclude
+    @Column(insertable = false) //чтобы не ругался на отсутствие записи
     private Set<User> users;
 
     public Role(Long id, String name) {
