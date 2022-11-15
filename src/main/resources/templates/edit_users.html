@@ -18,10 +18,10 @@
             </li>
         </ul>
     </div>
-    <div class="collapse navbar-collapse mx-auto">
-        <ul class="navbar-nav mx-auto">
-            <li class="nav-item mx-auto">
-                <a class="nav-link mx-auto" th:href="@{/logout}">
+    <div class="collapse navbar-collapse d-flex justify-content-end me-4">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">
                     Logout
                 </a>
             </li>
@@ -145,8 +145,5 @@
         </div>
     </div>
 </div>
-<form th:action="@{/admin/logout}" class="btn btn-info btn-lg" th:method="POST">
-    <input class="glyphicon glyphicon-log-out" type="submit" value="Logout"/>
-</form>
 </body>
 </html>

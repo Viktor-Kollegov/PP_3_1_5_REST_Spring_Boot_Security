@@ -18,10 +18,16 @@
         <th> with roles:</th>
         <th th:text="${admin.getRolesAsString()}"/>
     </a>
-    <div class="collapse navbar-collapse mx-auto">
-        <ul class="navbar-nav mx-auto">
-            <li class="nav-item mx-auto">
-                <a class="nav-link mx-auto" th:href="@{/logout}">
+    $position-values: (
+    0: 0,
+    50: 50%,
+    90: 90%,
+    100: 100%
+    );
+    <div class="collapse navbar-collapse d-flex justify-content-end me-4">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">
                     Logout
                 </a>
             </li>
