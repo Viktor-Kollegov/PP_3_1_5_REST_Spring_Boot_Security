@@ -29,7 +29,7 @@
                 <th:block th:each="str : ${error}">
                     <h3 th:text="${str}" class="text-center" style="color:red"></h3>
                 </th:block>
-                <form th:action="@{/admin/update/{id}(id=${userToUpdate.id})}" th:object = "${userToUpdate}" th:method="POST">
+                <form th:action="@{/admin/update/{id}(id=${userToUpdate.id})}" th:object = "${userToUpdate}" th:method="PATCH">
                     <div class ="form-group">
                         <label> User First Name <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</div> </label>
                         <input
@@ -120,7 +120,7 @@
                             error
                         </div> </label>
                         <select th:size="${roles.size()}" name="singleRoleId" >
-                            <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getName()}">
+                            <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getProperName()}">
                             </option>
                         </select>
                     </div>

@@ -44,6 +44,9 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
     @NotNull(message = "Нужно выбрать роль")
+//    @JoinTable(name="users_roles",
+//            foreignKey = @ForeignKey(name = "id"))
+//    @Transient // совместно с @JoinTable убрали столбец из базы, но отвалилась возможность изменения роли, почему? (ошибка 500)
     private Long singleRoleId;
 
     public String getRolesAsString() {

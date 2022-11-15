@@ -60,7 +60,7 @@ public class AdminController {
         return "edit_users";
     }
 
-    @PostMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public String updateUser(@RequestParam("newPassword") String newPassword,
                              @RequestParam("passwordConfirm") String passwordConfirm,
                              @RequestParam("previousPassword") String previousPassword,

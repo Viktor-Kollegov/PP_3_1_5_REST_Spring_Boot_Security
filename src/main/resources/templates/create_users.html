@@ -91,13 +91,13 @@
                                 placeholder="Enter password"
                         />
                     </div>
-                    
+
                     <div class="form-group">
                         <label> Role <div style="color:red" th:if="${#fields.hasErrors('singleRoleId')}" th:errors="*{singleRoleId}"> Role
                             error
                         </div> </label>
                         <select th:size="${roles.size()}" name="singleRoleId" >
-                            <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getName()}">
+                            <option th:each="r : ${roles}" th:value="${r.getId()}" th:text="${r.getProperName()}">
                             </option>
                         </select>
                     </div>
