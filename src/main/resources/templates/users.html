@@ -66,16 +66,14 @@
                 <td th:text="${user.firstName}"></td>
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.email}"></td>
-                <th:block th:each="role : ${user.roles}">
-                    <td th:text="${role.getName()}"></td>
-                </th:block>
+                <td th:text="${user.getRolesAsString()}"></td>
+                <!--<th:block th:each="role : ${user.roles}">-->
+                <!--<td th:text="${role.getName()}"></td>-->
+                <!--</th:block>-->
                 <td>
                     <div class="btn-toolbar">
                         <a th:href="@{/admin/edit/{id}(id=${user.id})}"
                            class="btn btn-primary mx-2">Update</a>
-<!--                        <form th:action="@{/admin/promote/{id}(id=${user.id})}" th:object="${user}" th:method="POST">-->
-<!--                            <button type="submit" class="btn btn-primary mx-2">Make Admin</button>-->
-<!--                        </form>-->
                         <form th:action="@{/admin/delete/{id}(id=${user.id})}" th:object="${user}" th:method="DELETE">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>

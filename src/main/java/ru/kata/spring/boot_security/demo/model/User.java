@@ -25,17 +25,17 @@ public class User implements UserDetails {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
     @Column(name = "first_name")
-    @Size(min=4, message = "Не меньше 4 символов")
+    @Size(min = 4, message = "Не меньше 4 символов")
     private String firstName;
     @Column(name = "last_name")
-    @Size(min=4, message = "Не меньше 4 символов")
+    @Size(min = 4, message = "Не меньше 4 символов")
     private String lastName;
     @Column
     @NotEmpty(message = "Не должен быть пустым")
     @Email(message = "Не соответствует формату")
     private String email;
     @Column(name = "username", unique = true, nullable = false)
-    @Size(min=4, message = "Не меньше 4 символов")
+    @Size(min = 4, message = "Не меньше 4 символов")
     private String username;
     @Column(nullable = false)
     @NotEmpty(message = "Не должен быть пустым")
@@ -44,6 +44,15 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
+
+    public String getRolesAsString() {
+        StringBuilder rolesString = new StringBuilder();
+        for (Role r : roles) {
+            rolesString.append(r.getName().substring(5))
+                    .append(" ");
+        }
+        return rolesString.toString();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
