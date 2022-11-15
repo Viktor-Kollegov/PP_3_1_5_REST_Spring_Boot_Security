@@ -13,7 +13,19 @@
 <body>
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
     <!-- Brand -->
-    <a class="navbar-brand" href="#"> Users Management System</a>
+    <a class="navbar-brand ms-4">
+        <strong th:text="${user.getUsername()}"></strong>
+        <th> with roles: </th> <th th:text="${user.getRolesAsString()}"/>
+    </a>
+    <div class="collapse navbar-collapse mx-auto">
+        <ul class="navbar-nav mx-auto">
+            <li class="nav-item mx-auto">
+                <a class="nav-link mx-auto" th:href="@{/logout}">
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
 </nav>
 
 <div class="container">

@@ -25,10 +25,4 @@ public class UserController {
         return "user";
     }
 
-    //С этим методом выводится сообщение с уточнением, действительно ли мы хотим разлогиниться.
-//    @PostMapping("/logout")
-//    public String logout() {
-//        return "redirect:/logout";
-//    }
-
 }

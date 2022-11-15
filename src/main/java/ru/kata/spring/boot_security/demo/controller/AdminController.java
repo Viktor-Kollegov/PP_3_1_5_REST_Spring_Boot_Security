@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -28,8 +29,9 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String printWelcome(ModelMap modelMap) {
+    public String printWelcome(ModelMap modelMap, Principal principal) {
         modelMap.addAttribute("users", userService.getAllUsers());
+        modelMap.addAttribute("admin", userService.findByUsername(principal.getName()));
         return "users";
     }
 
@@ -97,12 +99,6 @@ public class AdminController {
         userService.cleanUsersTable();
         return "redirect:/admin";
     }
-
-    //С этим методом выводится окно с уточнением, действительно ли мы хотим разлогиниться.
-//    @PostMapping("/logout")
-//    public String logout() {
-//        return "redirect:/logout";
-//    }
 
 }
 
