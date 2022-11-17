@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    boolean saveUser(User user);
+    void saveUser(User user);
 
     void removeUser(User userToDelete);
 

@@ -27,16 +27,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            return false;
+    public void saveUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()) == null) {
+            user.setRoles(Collections.singleton(roleRepository.getById(user.getSingleRoleId())));
+            //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
         }
-        user.setRoles(Collections.singleton(roleRepository.getById(user.getSingleRoleId())));
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return true;
     }
 
     @Override
@@ -49,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(User updatedUser) {
         updatedUser.setRoles(Collections.singleton(roleRepository.getById(updatedUser.getSingleRoleId())));
-        updatedUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
+        //updatedUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
         userRepository.save(updatedUser);
     }
 

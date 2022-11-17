@@ -82,11 +82,118 @@
                         <td th:text="${user.getRolesAsString()}"></td>
                         <td>
                             <div class="btn-toolbar">
-                                <a th:href="@{/admin/edit/{id}(id=${user.id})}"
-                                   class="btn btn-primary mx-2">Edit</a>
-                                <form th:action="@{/admin/delete/{id}(id=${user.id})}" th:object="${user}"
-                                      th:method="DELETE">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                <form th:action="@{/admin/update/{id}(id=${user.id})}"
+                                      th:object="${user}"
+                                      th:method="PATCH">
+                                    <!-- Button to Edit trigger modal -->
+                                    <button type="button" class="btn btn-primary float-md-end mx-2"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="${'#edit'+user.id}">
+                                        Edit
+                                    </button>
+                                    <!-- Editing Modal -->
+                                    <div class="modal fade" th:id="${'edit'+user.id}" tabindex="-1"
+                                         aria-labelledby="exampleModalLabel"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel2">Edit user</h1>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> ID
+                                                        </strong>
+                                                        <input
+                                                                type="text"
+                                                                disabled="disabled"
+                                                                name="id"
+                                                                th:value="*{id}"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> First name
+                                                        </strong>
+                                                        <input
+                                                                type="text"
+                                                                name="firstName"
+                                                                th:field="*{firstName}"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> Last name
+                                                        </strong>
+                                                        <input
+                                                                type="text"
+                                                                name="lastName"
+                                                                th:field="*{lastName}"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> Age </strong>
+                                                        <input
+                                                                type="number"
+                                                                min="0"
+                                                                name="age"
+                                                                th:field="*{age}"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> Email
+                                                        </strong>
+                                                        <input
+                                                                type="text"
+                                                                name="email"
+                                                                th:field="*{email}"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> Password
+                                                        </strong>
+                                                        <input
+                                                                type="text"
+                                                                name="password"
+                                                                th:field="*{password}"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center"> Role
+                                                        </strong>
+                                                        <select th:size="${roles.size()}" name="singleRoleId"
+                                                                class="form-control">
+                                                            <option th:each="r : ${roles}" th:value="${r.getId()}"
+                                                                    th:text="${r.getProperName()}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </form>
                                 <form th:action="@{/admin/delete/{id}(id=${user.id})}"
                                       th:object="${user}"
@@ -95,7 +202,7 @@
                                     <button type="button" class="btn btn-danger float-md-end mx-2"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="${'#delete'+user.id}">
-                                        Delete in modal
+                                        Delete
                                     </button>
                                     <!-- Deletion Modal -->
                                     <div class="modal fade" th:id="${'delete'+user.id}" tabindex="-1"
@@ -173,8 +280,9 @@
                                                     <div class="form-group">
                                                         <strong class="d-flex justify-content-center"> Role
                                                         </strong>
-                                                        <select th:size="${roles.size()}" name="singleRoleId" class="form-control"
-                                                        disabled="disabled">
+                                                        <select th:size="${roles.size()}" name="singleRoleId"
+                                                                class="form-control"
+                                                                disabled="disabled">
                                                             <option th:each="r : ${roles}" th:value="${r.getId()}"
                                                                     th:text="${r.getProperName()}">
                                                             </option>
@@ -284,11 +392,13 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="box-footer">
-                                    <button type="submit" class="btn btn-primary justify-content-center">
+                                <br>
+                                <div class="d-grid gap-2 col-4 mx-auto">
+                                    <button type="submit" class="btn btn-success">
                                         Add new user
                                     </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>

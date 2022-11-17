@@ -36,7 +36,7 @@ public class AdminController {
         modelMap.addAttribute("roles", roleRepository.findAll()); //для вкладки
         // В модальное окно подтягивается данный юзер, без него инициализация th:field невозможна
         // Но, удаляется у нас юзер из цикла таймлиф, а не этот.
-        // modelMap.addAttribute("user", new User());
+        modelMap.addAttribute("user", new User());
         // В прочем th:value покрывает потребности, в извращениях нет нужды
         return "users";
     }
@@ -50,39 +50,19 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editUserForm(@PathVariable Long id, Model model) {
-        if (!model.containsAttribute("userToUpdate")) {
-            userService.findUserById(id).ifPresent(userToUpdate ->
-                    model.addAttribute("userToUpdate", userToUpdate));
-        }
-        model.addAttribute("roles", roleRepository.findAll());
-        return "edit_users";
-    }
+//    @GetMapping("/edit/{id}")
+//    public String editUserForm(@PathVariable Long id, Model model) {
+//        if (!model.containsAttribute("userToUpdate")) {
+//            userService.findUserById(id).ifPresent(userToUpdate ->
+//                    model.addAttribute("userToUpdate", userToUpdate));
+//        }
+//        model.addAttribute("roles", roleRepository.findAll());
+//        return "edit_users";
+//    }
 
     @PatchMapping("/update/{id}")
-    public String updateUser(@RequestParam("newPassword") String newPassword,
-                             @RequestParam("passwordConfirm") String passwordConfirm,
-                             @RequestParam("previousPassword") String previousPassword,
-                             @ModelAttribute("userToUpdate") @Valid User UpdatedUser,
-                             BindingResult bindingResult,
-                             Model model) {
-        model.addAttribute("roles", roleRepository.findAll());
-        if (bindingResult.hasErrors()) {
-            return "edit_users";
-        } else if (!Objects.equals(passwordConfirm, newPassword)) {
-            model.addAttribute("error", "The entered password pair does not match");
-            return "edit_users";
-        } else if (bCryptPasswordEncoder.matches(previousPassword, UpdatedUser.getPassword())) {
-            if (newPassword.length() == 0) {
-                newPassword = previousPassword;
-            }
-            UpdatedUser.setPassword(newPassword);
-            userService.updateUser(UpdatedUser);
-        } else {
-            model.addAttribute("error", "Current password mismatch");
-            return "edit_users";
-        }
+    public String updateUser(User UpdatedUser) {
+        userService.updateUser(UpdatedUser);
         return "redirect:/admin";
     }
 
