@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
@@ -36,10 +35,7 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String createUser(User userToCreate, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/admin";
-        }
+    public String createUser(User userToCreate) {
         userService.saveUser(userToCreate);
         return "redirect:/admin";
     }
