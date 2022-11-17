@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public void saveUser(User user) {
         if (userRepository.findByUsername(user.getUsername()) == null) {
             user.setRoles(Collections.singleton(roleRepository.getById(user.getSingleRoleId())));
-            //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
     }
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(User updatedUser) {
         updatedUser.setRoles(Collections.singleton(roleRepository.getById(updatedUser.getSingleRoleId())));
-        //updatedUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
+        updatedUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
         userRepository.save(updatedUser);
     }
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
     }
-    
+
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();

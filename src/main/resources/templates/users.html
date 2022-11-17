@@ -120,7 +120,7 @@
                                                         <input
                                                                 type="text"
                                                                 name="firstName"
-                                                                th:field="*{firstName}"
+                                                                th:value="*{firstName}"
                                                                 class="form-control"
                                                         />
                                                     </div>
@@ -132,7 +132,7 @@
                                                         <input
                                                                 type="text"
                                                                 name="lastName"
-                                                                th:field="*{lastName}"
+                                                                th:value="*{lastName}"
                                                                 class="form-control"
                                                         />
                                                     </div>
@@ -143,7 +143,7 @@
                                                                 type="number"
                                                                 min="0"
                                                                 name="age"
-                                                                th:field="*{age}"
+                                                                th:value="*{age}"
                                                                 class="form-control"
                                                         />
                                                     </div>
@@ -152,9 +152,10 @@
                                                         <strong class="d-flex justify-content-center"> Email
                                                         </strong>
                                                         <input
-                                                                type="text"
+                                                                type="email"
+                                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}"
                                                                 name="email"
-                                                                th:field="*{email}"
+                                                                th:value="*{email}"
                                                                 class="form-control"
                                                         />
                                                     </div>
@@ -167,6 +168,7 @@
                                                                 name="password"
                                                                 th:field="*{password}"
                                                                 class="form-control"
+                                                                required
                                                         />
                                                     </div>
 
@@ -174,7 +176,7 @@
                                                         <strong class="d-flex justify-content-center"> Role
                                                         </strong>
                                                         <select th:size="${roles.size()}" name="singleRoleId"
-                                                                class="form-control">
+                                                                class="form-control" required >
                                                             <option th:each="r : ${roles}" th:value="${r.getId()}"
                                                                     th:text="${r.getProperName()}">
                                                             </option>
@@ -332,6 +334,7 @@
                                             th:field="*{firstName}"
                                             class="form-control"
                                             placeholder="Enter User First Name"
+                                            required
                                     />
                                 </div>
 
@@ -345,6 +348,7 @@
                                             th:field="*{lastName}"
                                             class="form-control"
                                             placeholder="Enter User Last Name"
+                                            required
                                     />
                                 </div>
 
@@ -363,11 +367,13 @@
                                     <strong class="d-flex justify-content-center"> Email
                                     </strong>
                                     <input
-                                            type="text"
+                                            type="email"
+                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}"
                                             name="email"
                                             th:field="*{email}"
                                             class="form-control"
                                             placeholder="Enter User Email"
+                                            required
                                     />
                                 </div>
 
@@ -381,12 +387,13 @@
                                             th:field="*{password}"
                                             class="form-control"
                                             placeholder="Enter password"
+                                            required
                                     />
                                 </div>
                                 <div class="form-group">
                                     <strong class="d-flex justify-content-center"> Role
                                     </strong>
-                                    <select th:size="${roles.size()}" name="singleRoleId" class="form-control">
+                                    <select th:size="${roles.size()}" name="singleRoleId" class="form-control" required >
                                         <option th:each="r : ${roles}" th:value="${r.getId()}"
                                                 th:text="${r.getProperName()}">
                                         </option>

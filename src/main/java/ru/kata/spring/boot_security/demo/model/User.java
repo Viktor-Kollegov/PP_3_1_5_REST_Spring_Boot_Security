@@ -5,10 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
@@ -26,24 +22,18 @@ public class User implements UserDetails {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
     @Column(name = "first_name")
-    @Size(min = 4, message = "Не меньше 4 символов")
     private String firstName;
     @Column(name = "last_name")
-    @Size(min = 4, message = "Не меньше 4 символов")
     private String lastName;
     private int age;
     @Column(unique = true, nullable = false)
-    @NotEmpty(message = "Не должен быть пустым")
-    @Email(message = "Не соответствует формату")
     private String email;
     @Column(nullable = false)
-    @NotEmpty(message = "Не должен быть пустым")
     private String password;
     @ManyToMany
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id") ,
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
-    @NotNull(message = "Нужно выбрать роль")
 //    @JoinTable(name="users_roles",
 //            foreignKey = @ForeignKey(name = "id"))
 //    @Transient // совместно с @JoinTable убрали столбец из базы, но отвалилась возможность изменения роли, почему? (ошибка 500)

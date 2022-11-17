@@ -1,8 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -10,21 +8,17 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import javax.validation.Valid;
 import java.security.Principal;
-import java.util.*;
 
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final RoleRepository roleRepository;
 
-    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
+    public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
     }
 
@@ -42,23 +36,13 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String createUser(@Valid User userToCreate, BindingResult bindingResult) {
+    public String createUser(User userToCreate, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/admin";
         }
         userService.saveUser(userToCreate);
         return "redirect:/admin";
     }
-
-//    @GetMapping("/edit/{id}")
-//    public String editUserForm(@PathVariable Long id, Model model) {
-//        if (!model.containsAttribute("userToUpdate")) {
-//            userService.findUserById(id).ifPresent(userToUpdate ->
-//                    model.addAttribute("userToUpdate", userToUpdate));
-//        }
-//        model.addAttribute("roles", roleRepository.findAll());
-//        return "edit_users";
-//    }
 
     @PatchMapping("/update/{id}")
     public String updateUser(User UpdatedUser) {
@@ -71,18 +55,6 @@ public class AdminController {
         userService.removeUser(userToDelete);
         return "redirect:/admin";
     }
-
-//    Сергей Горностаев @sergey-gornostaev Куратор тега Java
-//    Седой и строгий
-//    Во-первых, у Thymeleaf нет модальных окон. Модальное окно у вас относится к
-//    Bootstrap. Во-вторых, важно понимать, что Thymeleaf - это шаблонизатор,
-//    он выполняется на бэкенде, а Bootstrap выполняется на фронтенде. Бэкенд и
-//    фронтенд - это две разных программы, написанные на разных языках и работающие
-//    на разных компьютерах в разное время. Так что вам придётся либо в цикле
-//    шаблонизатора наплодить разных модалок на каждой итерации, либо придётся
-//    написать javascript-код, который будет передавать данные из нажатой кнопки в
-//    единственное модальное окно. Естественно, второй вариант разумнее.
-//    Ответ написан более трёх лет назад
 
 }
 
