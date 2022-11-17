@@ -34,15 +34,19 @@ public class AdminController {
         modelMap.addAttribute("admin", userService.findByUsername(principal.getName()));
         modelMap.addAttribute("newUser", new User()); //для вкладки
         modelMap.addAttribute("roles", roleRepository.findAll()); //для вкладки
+        // В модальное окно подтягивается данный юзер, без него инициализация th:field невозможна
+        // Но, удаляется у нас юзер из цикла таймлиф, а не этот.
+        // modelMap.addAttribute("user", new User());
+        // В прочем th:value покрывает потребности, в извращениях нет нужды
         return "users";
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String createUser(@Valid User userToCreate, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/admin";
         }
-        userService.saveUser(user);
+        userService.saveUser(userToCreate);
         return "redirect:/admin";
     }
 
@@ -88,11 +92,17 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/clear")
-    public String ClearTheTable() {
-        userService.cleanUsersTable();
-        return "redirect:/admin";
-    }
+//    Сергей Горностаев @sergey-gornostaev Куратор тега Java
+//    Седой и строгий
+//    Во-первых, у Thymeleaf нет модальных окон. Модальное окно у вас относится к
+//    Bootstrap. Во-вторых, важно понимать, что Thymeleaf - это шаблонизатор,
+//    он выполняется на бэкенде, а Bootstrap выполняется на фронтенде. Бэкенд и
+//    фронтенд - это две разных программы, написанные на разных языках и работающие
+//    на разных компьютерах в разное время. Так что вам придётся либо в цикле
+//    шаблонизатора наплодить разных модалок на каждой итерации, либо придётся
+//    написать javascript-код, который будет передавать данные из нажатой кнопки в
+//    единственное модальное окно. Естественно, второй вариант разумнее.
+//    Ответ написан более трёх лет назад
 
 }
 
