@@ -31,7 +31,7 @@ public class AdminController {
         // Но, удаляется у нас юзер из цикла таймлиф, а не этот.
         modelMap.addAttribute("user", new User());
         // В прочем th:value покрывает потребности, в извращениях нет нужды
-        return "users";
+        return "RESTusers";
     }
 
     @PostMapping()
@@ -40,7 +40,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PatchMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public String updateUser(User UpdatedUser) {
         userService.updateUser(UpdatedUser);
         return "redirect:/admin";

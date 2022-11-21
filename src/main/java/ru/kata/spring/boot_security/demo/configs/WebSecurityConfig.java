@@ -27,6 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
+                .csrf().disable() //  чтобы проходили не только гет запросы
                 .formLogin().successHandler(successUserHandler)
                 .permitAll()
                 .and()

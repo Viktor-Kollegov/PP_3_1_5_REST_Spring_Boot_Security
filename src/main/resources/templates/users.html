@@ -108,7 +108,7 @@
                                             <div class="btn-toolbar">
                                                 <form th:action="@{/admin/update/{id}(id=${user.id})}"
                                                       th:object="${user}"
-                                                      th:method="PATCH">
+                                                      th:method="PUT">
                                                     <!-- Button to Edit trigger modal -->
                                                     <button type="button" class="btn btn-primary float-md-end mx-2"
                                                             data-bs-toggle="modal"
