@@ -13,7 +13,7 @@
 
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
     <!-- Brand -->
-    <a class="navbar-brand ms-4" id="navbar">
+    <a class="navbar-brand ms-4" id="navbar-head">
         <!--Filling via JSON-->
     </a>
     <div class="collapse navbar-collapse d-flex justify-content-end me-4">
@@ -95,7 +95,6 @@
 
                                     <tbody id="full">
                                     <!--Filling via JSON-->
-
                                     </tbody>
                                 </table>
                             </div>
@@ -114,7 +113,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
                                         <div class="card-body">
-                                            <form class="add-post-form">
+                                            <form class="add-user-form" id="new-user-form">
                                                 <div class="form-group">
                                                     <strong class="d-flex justify-content-center"> First name
                                                     </strong>
@@ -126,8 +125,7 @@
                                                             required
                                                     />
                                                 </div>
-
-
+                                                
                                                 <div class="form-group">
                                                     <strong class="d-flex justify-content-center"> Last name
                                                     </strong>
@@ -147,6 +145,7 @@
                                                             min="0"
                                                             id="age"
                                                             class="form-control"
+                                                            placeholder="Set User Age"
                                                     />
                                                 </div>
 
@@ -163,7 +162,6 @@
                                                     />
                                                 </div>
 
-
                                                 <div class="form-group">
                                                     <strong class="d-flex justify-content-center"> Password
                                                     </strong>
@@ -175,6 +173,7 @@
                                                             required
                                                     />
                                                 </div>
+
                                                 <div class="form-group">
                                                     <strong class="d-flex justify-content-center"> Role
                                                     </strong>
@@ -183,7 +182,9 @@
                                                         <!--Filling via JSON-->
                                                     </select>
                                                 </div>
+
                                                 <br>
+
                                                 <div class="d-grid gap-2 col-4 mx-auto">
                                                     <button type="submit" class="btn btn-success">
                                                         Add new user
@@ -243,19 +244,19 @@
         res => {
             res.json().then(
                 data => {
-                    let temp = "";
-                    temp += "<strong>" + data.username + "</strong>";
-                    temp += "<th> with roles: </th>";
-                    temp += "<th>" + data.rolesAsString + "</th>";
-                    document.getElementById("navbar").innerHTML = temp;
-                    temp = "<tr>";
-                    temp += "<td>" + data.id + "</td>";
-                    temp += "<td>" + data.firstName + "</td>";
-                    temp += "<td>" + data.lastName + "</td>";
-                    temp += "<td>" + data.age + "</td>";
-                    temp += "<td>" + data.email + "</td>";
-                    temp += "<td>" + data.rolesAsString + "</td></tr>";
-                    document.getElementById("table").innerHTML = temp;
+                    document.getElementById('navbar-head').innerHTML = `
+                        <strong>${data.username}</strong>
+                        with roles:
+                        ${data.rolesAsString}`;
+
+                    document.getElementById("table").innerHTML = `
+                        <tr>
+                        <td>${data.id}</td>
+                        <td>${data.firstName}</td>
+                        <td>${data.lastName}</td>
+                        <td>${data.age}</td>
+                        <td>${data.email}</td>
+                        <td>${data.rolesAsString}</td></tr>`;
                 }
             )
         }
@@ -264,32 +265,30 @@
         res => {
             res.json().then(
                 data => {
-                    let temp = "";
                     data.forEach((u) => {
-                        temp += "<tr><td>" + u.id + "</td>";
-                        temp += "<td>" + u.firstName + "</td>";
-                        temp += "<td>" + u.lastName + "</td>";
-                        temp += "<td>" + u.age + "</td>";
-                        temp += "<td>" + u.email + "</td>";
-                        temp += "<td>" + u.rolesAsString + "</td>";
-                        temp += "<td id=\"actions_" + u.id + "\"" + ">" +
-                            "<div className=\"btn-toolbar\">" +
-                            "<form action=\"/admin/api/update/" + u.id +
-                            "\" object=\"" + u + "\" method=\"PUT\">" +
-                            "<button type=\"button\" " +
-                            "className=\"btn btn-primary float-md-end mx-2\" " +
-                            "data-bs-toggle=\"modal\" data-bs-target=\"#edit" + u.id +
-                            "\">Edit</button>" + "</form>" +
-                            "<form action=\"/admin/api/delete/" + u.id +
-                            "\" object=\"" + u + "\" method=\"DELETE\">" +
-                            "<button type=\"button\" " +
-                            "className=\"btn btn-primary float-md-end mx-2\" " +
-                            "data-bs-toggle=\"modal\" data-bs-target=\"#delete" + u.id +
-                            "\">Delete</button>" + "</form>" +
-                            "</td></tr>";
+                        document.getElementById("full").innerHTML +=
+                            `<tr id=tr_${u.id}><td>${u.id}</td>
+                            <td>${u.firstName}</td>
+                            <td>${u.lastName}</td>
+                            <td>${u.age}</td>
+                            <td>${u.email}</td>
+                            <td>${u.rolesAsString}</td>
+                            <td id="actions_${u.id}">
+                            <div className="btn-toolbar">
+                            <form action="/admin/api/update/${u.id}"
+                            object="${u}" method="PUT">
+                            <button type="button"
+                            className="btn btn-primary float-md-end mx-2"
+                            data-bs-toggle="modal" data-bs-target="#edit${u.id}">
+                            Edit</button></form>
+                            <form action="/admin/api/delete/${u.id}" object="${u}"
+                            method="DELETE">
+                            <button type="button"
+                            className="btn btn-primary float-md-end mx-2"
+                            data-bs-toggle="modal" data-bs-target="#delete${u.id}">
+                            Delete</button></form>
+                            </td></tr>`;
                     })
-                    document.getElementById("full").innerHTML = temp;
-                    // document.getElementById("actions_7").innerHTML = "temp7";
                 }
             )
         }
@@ -297,25 +296,19 @@
     fetch("admin/api/roles").then(
         res => {
             res.json().then(
-                data => {
-                    let temp = "";
-                    data.forEach((r) => {
-                        temp += "<option value=\"" + r.id +
-                                "\">" + r.properName + "</option>";
+                roles => {
+                    roles.forEach((r) => {
+                        let el = document.createElement("option");
+                        el.text = r.properName;
+                        el.value = r.id;
+                        document.getElementById("singleRoleId").appendChild(el);
                     })
-                    document.getElementById("singleRoleId").innerHTML = temp;
                 }
             )
         }
     )
-    const addUserForm = document.querySelector('.add-post-form');
-    const firstName = document.getElementById('firstName');
-    const lastName = document.getElementById('lastName');
-    const age = document.getElementById('age');
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const singleRoleId = document.getElementById('singleRoleId');
-    addUserForm.addEventListener('submit', (e) => {
+    let form = document.forms['new-user-form'];
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
         fetch("/admin/api", {
             method: 'POST',
@@ -323,16 +316,50 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                firstName: firstName.value,
-                lastName: lastName.value,
-                age: age.value,
-                email: email.value,
-                password: password.value,
-                singleRoleId: singleRoleId.value
+                firstName: form.firstName.value,
+                lastName: form.lastName.value,
+                age: form.age.value,
+                email: form.email.value,
+                password: form.password.value,
+                singleRoleId: form.singleRoleId.value
             })
         })
-        // .then(res => res.json())
-    })
+            .then(form.reset())
+            .then(res => res.json())
+            .then(u => {
+                let temp =
+                    `<tr id=tr_${u.id}><td>${u.id}</td>
+                            <td>${u.firstName}</td>
+                            <td>${u.lastName}</td>
+                            <td>${u.age}</td>
+                            <td>${u.email}</td>
+                            <td>${u.rolesAsString}</td>
+                            <td id="actions_${u.id}">
+                            <div className="btn-toolbar">
+                            <form action="/admin/api/update/${u.id}"
+                            object="${u}" method="PUT">
+                            <button type="button"
+                            className="btn btn-primary float-md-end mx-2"
+                            data-bs-toggle="modal" data-bs-target="#edit${u.id}">
+                            Edit</button></form>
+                            <form action="/admin/api/delete/${u.id}" object="${u}"
+                            method="DELETE">
+                            <button type="button"
+                            className="btn btn-primary float-md-end mx-2"
+                            data-bs-toggle="modal" data-bs-target="#delete${u.id}">
+                            Delete</button></form>
+                            </td></tr>`;
+                document.getElementById("full").insertAdjacentHTML('beforeend',
+                    temp);
+                document.getElementById('home-tab').click();
+                document.getElementById('tr_' + u.id).scrollIntoView();
+            })
+    });
+    /*
+    let ell = document.closest("tr"); // tr element (ваша строчка)
+                ell.parentElement.removeChild(ell);
+     */
+    //const myModal = new bootstrap.Modal(document.getElementById('myModal'), options);
     /*
     <td>
                                                 <div class="btn-toolbar">

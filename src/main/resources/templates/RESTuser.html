@@ -12,7 +12,7 @@
 <body>
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
     <!-- Brand -->
-    <a class="navbar-brand ms-4" id="navbar">
+    <a class="navbar-brand ms-4" id="navbar-head">
         <!--Filling via JSON-->
     </a>
     <div class="collapse navbar-collapse d-flex justify-content-end me-4">
@@ -84,19 +84,19 @@
         res => {
             res.json().then(
                 data => {
-                    let temp = "";
-                    temp += "<strong>" + data.username + "</strong>";
-                    temp += "<th> with roles: </th>";
-                    temp += "<th>" + data.rolesAsString + "</th>";
-                    document.getElementById("navbar").innerHTML = temp;
-                    temp = "<tr>";
-                    temp += "<td>" + data.id + "</td>";
-                    temp += "<td>" + data.firstName + "</td>";
-                    temp += "<td>" + data.lastName + "</td>";
-                    temp += "<td>" + data.age + "</td>";
-                    temp += "<td>" + data.email + "</td>";
-                    temp += "<td>" + data.rolesAsString + "</td></tr>";
-                    document.getElementById("table").innerHTML = temp;
+                    document.getElementById('navbar-head').innerHTML = `
+                        <strong>${data.username}</strong>
+                        with roles:
+                        ${data.rolesAsString}`;
+
+                    document.getElementById("table").innerHTML = `
+                        <tr>
+                        <td>${data.id}</td>
+                        <td>${data.firstName}</td>
+                        <td>${data.lastName}</td>
+                        <td>${data.age}</td>
+                        <td>${data.email}</td>
+                        <td>${data.rolesAsString}</td></tr>`;
                 }
             )
         }

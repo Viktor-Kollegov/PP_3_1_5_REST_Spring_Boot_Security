@@ -31,9 +31,9 @@ public class AdminRestController {
     }
 
     @PostMapping()
-    public User createUser(@RequestBody User userToCreate) {
+    public User createUser(@RequestBody User userToCreate) { // ResponseEntity<User> ?
         userService.saveUser(userToCreate);
-        return userToCreate;
+        return userToCreate; // new ResponseEntity<>(userToCreate, HttpStatus.CREATED); ?
     }
 
     @PutMapping("/update/{id}")
