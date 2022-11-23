@@ -241,8 +241,11 @@
 </div>
 
 <script>
-    fillUsersTable();
-    addingEditModal();
+
+    fillUsersTable(); // 1 раз
+    addingEditModal(); // 1 раз
+    getRoles(); // 1 раз
+
     // Заполняем шапку и изеринфо
     (function () {
         fetch("user/api").then(
@@ -267,8 +270,9 @@
             }
         );
     })();
+
     // Заполняем таблицу
-        function fillUsersTable() {
+    function fillUsersTable() {
         fetch("admin/api/users").then(
             res => {
                 res.json().then(
@@ -297,8 +301,10 @@
             }
         )
     }
+
     // Динамически создаем модалку для редактирования
     var listeners = [];
+
     function addingEditModal() {
         fetch("admin/api/users").then(
             res => {
@@ -399,7 +405,7 @@
                                                             Role
                                                         </strong>
                                                         <select size="2"
-                                                            id="singleRoleId"
+                                                            id="singleRoleId${u.id}"
                                                             class="form-control"
                                                             required>
                                                             <!--Filling via JSON-->
@@ -422,26 +428,35 @@
                                     </div>
                                 </form>
                             `;
+                                // вызываем для созданной модалки заполнение ролей
+                                getRoles(u.id);
                             });
                         })
                     })
             })
     }
-    // Получаем роли для формы
-    fetch("admin/api/roles").then(
-        res => {
-            res.json().then(
-                roles => {
-                    roles.forEach((r) => {
-                        let el = document.createElement("option");
-                        el.text = r.properName;
-                        el.value = r.id;
-                        document.getElementById("singleRoleId").appendChild(el);
-                    })
-                }
-            )
+
+    // Получаем роли для формы создания нового юзера
+    function getRoles(id) {
+        if (id === undefined) {
+            id = "";
         }
-    )
+        fetch("admin/api/roles").then(
+            res => {
+                res.json().then(
+                    roles => {
+                        roles.forEach((r) => {
+                            let el = document.createElement("option");
+                            el.text = r.properName;
+                            el.value = r.id;
+                            document.getElementById("singleRoleId" + id).appendChild(el);
+                        })
+                    }
+                )
+            }
+        )
+    }
+
     // Сохраняем нового юзера, добавляем в таблицу, очищаем форму и перемещаемся к новой строчке
     let form = document.forms['new-user-form'];
     form.addEventListener('submit', (e) => {
