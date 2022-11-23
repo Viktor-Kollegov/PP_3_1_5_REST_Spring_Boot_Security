@@ -25,6 +25,11 @@ public class AdminRestController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
     @GetMapping("/roles")
     public List<Role> getRoles() {
         return roleRepository.findAll();
@@ -36,17 +41,16 @@ public class AdminRestController {
         return userToCreate; // new ResponseEntity<>(userToCreate, HttpStatus.CREATED); ?
     }
 
-    @PatchMapping("/update")
+    @PutMapping("/update")
     public User updateUser(@RequestBody User UpdatedUser) {
-        System.out.println("Зашли в контроллер обновления юзера с JSON");
         userService.updateUser(UpdatedUser);
         return UpdatedUser;
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteUser(@RequestBody User userToDelete) {
+    public String deleteUser(@RequestBody User userToDelete, @PathVariable Long id) {
         userService.removeUser(userToDelete);
-        return "Deletion successful";
+        return "Deletion user with id = " + id + " successful";
     }
 
 }

@@ -275,7 +275,7 @@
                 res.json().then(
                     data => {
                         data.forEach((u) => {
-                            document.getElementById("full").innerHTML +=
+                            document.getElementById("full").insertAdjacentHTML('beforeend',
                                 `<tr id=tr_${u.id}><td>${u.id}</td>
                             <td>${u.firstName}</td>
                             <td>${u.lastName}</td>
@@ -292,7 +292,7 @@
                             class="btn btn-danger float-md-end mx-2"
                             data-bs-toggle="modal" data-bs-target="#delete${u.id}" id="delete-button-${u.id}">
                             Delete</button>
-                            </td></tr>`;
+                            </td></tr>`);
                         });
                     })
             }
@@ -301,6 +301,7 @@
 
     // Динамически создаем модалку для редактирования
     function addingEditModal(id) {
+        var firstTime = [];
         fetch("admin/api/users").then(
             res => {
                 res.json().then(
@@ -308,9 +309,12 @@
                         data.forEach((u) => {
                             if (id !== undefined && u.id !== id) return; // если добавляется обработчик для новой строчки,
                             // мы проверяем этот момент, дабы не задваивать обработчики и формы на всех строках
-                            document.getElementById('edit-button-' + u.id).addEventListener('mouseover', (e) => {
+
+                            document.getElementById('btn-toolbar-' + u.id).addEventListener('mouseover', (e) => {
                                 e.preventDefault();
-                                document.getElementById('btn-toolbar-' + u.id).innerHTML += `
+                                if (!firstTime[u.id]) { // Добавляем проверку, если модальные окна были сформированы,
+                                    // мы их не задваиваем
+                                    document.getElementById('btn-toolbar-' + u.id).insertAdjacentHTML('beforeend', `
                                 <form id="edit-form-${u.id}">
                                     <div class="modal fade" id="edit${u.id}" tabindex="-1"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -396,7 +400,7 @@
                                                         />
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="edit-roles-${u.id}">
                                                         <strong class="d-flex justify-content-center">
                                                             Role
                                                         </strong>
@@ -412,7 +416,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button"
                                                         class="btn btn-secondary"
-                                                        data-bs-dismiss="modal" id="close-button">
+                                                        data-bs-dismiss="modal" id="close-button-edit-${u.id}">
                                                         Close
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">
@@ -423,11 +427,133 @@
                                         </div>
                                     </div>
                                 </form>
-                            `;
-                                getRoles(u.id); // вызываем для созданной модалки заполнение ролей
-                                editUser(u.id); // вызываем функцию отправки данных на контроллер
+                            `);
+                                    getRoles(u.id); // вызываем для созданной модалки заполнение ролей
+                                    addingDeleteModal(u.id) // вызываем создание модалки удаления
+                                    editUser(u.id); // вызываем функцию отправки данных на контроллер
+                                    firstTime[u.id] = true; // Добавляем проверку, если модальные окна были сформированы,
+                                    // мы их не задваиваем
+                                }
                             });
                         })
+                    })
+            })
+    }
+
+    // Динамически создаем модалку для удаления
+    function addingDeleteModal(id) {
+        fetch("admin/api/user/" + id).then(
+            res => {
+                res.json().then(
+                    (u) => {
+                        document.getElementById('btn-toolbar-' + u.id).insertAdjacentHTML('beforeend', `
+                                <form id="delete-form-${u.id}">
+                                    <div class="modal fade" id="delete${u.id}" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel2">
+                                                        Delete user</h1>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            ID
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            disabled="disabled"
+                                                            id="id"
+                                                            value="${u.id}"
+                                                            class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                             First name
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            id="firstName"
+                                                            value="${u.firstName}"
+                                                            class="form-control"
+                                                            disabled="disabled"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Last name
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            id="lastName"
+                                                            value="${u.lastName}"
+                                                            class="form-control"
+                                                            disabled="disabled"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Age
+                                                        </strong>
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            id="age"
+                                                            value="${u.age}"
+                                                            class="form-control"
+                                                            disabled="disabled"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Email
+                                                        </strong>
+                                                        <input
+                                                            type="email"
+                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}"
+                                                            id="email"
+                                                            value="${u.email}"
+                                                            class="form-control"
+                                                            disabled="disabled"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group" id="delete-roles-${u.id}">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Role
+                                                        </strong>
+                                                        <select size="2"
+                                                            id="deleteSingleRoleId${u.id}"
+                                                            class="form-control"
+                                                            disabled="disabled">
+                                                            <!--Filling via JSON-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal" id="close-button-delete-${u.id}">
+                                                        Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-danger">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            `);
+                        document.getElementById('deleteSingleRoleId' + id).innerHTML = document.getElementById('singleRoleId' + id).innerHTML;
+                        deleteUser(u.id); // вызываем функцию отправки данных на контроллер
                     })
             })
     }
@@ -438,7 +564,7 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             fetch("/admin/api/update", {
-                method: 'PATCH',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -449,13 +575,15 @@
                     age: form.age.value,
                     email: form.email.value,
                     password: form.password.value,
-                    singleRoleId: 2 // поменять, найти способ получения id поля
+                    singleRoleId: document.getElementById('singleRoleId' + id).value
                 })
             })
                 .then(res => res.json())
                 .then(u => { // Удаляем старую строчку и вставляем новую
-                    document.getElementById('close-button').click(); // закрываем вручную модалку
-                    let temp =
+                    document.getElementById('close-button-edit-' + u.id).click(); // закрываем вручную модалку
+                    document.getElementById("tr_" + u.id).remove();
+                    let pr = u.id - 1;
+                    document.getElementById("tr_" + pr).insertAdjacentHTML('afterend',
                         `<tr id=tr_${u.id}><td>${u.id}</td>
                             <td>${u.firstName}</td>
                             <td>${u.lastName}</td>
@@ -472,13 +600,33 @@
                             class="btn btn-danger float-md-end mx-2"
                             data-bs-toggle="modal" data-bs-target="#delete${u.id}" id="delete-button-${u.id}">
                             Delete</button>
-                            </td></tr>`;
-                    document.getElementById("tr_" + u.id).remove();
-                    let pr = u.id - 1;
-                    document.getElementById("tr_" + pr).insertAdjacentHTML('afterend',
-                            temp);
+                            </td></tr>`);
                     addingEditModal(u.id); // вызываем добавление обработчиков событий для вызова модалок на новой строчке
                 });
+        });
+    }
+
+    // Удаляем юзера
+    function deleteUser(id) {
+        let form = document.forms['delete-form-' + id];
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch("/admin/api/delete/" + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: form.id.value,
+                    firstName: form.firstName.value,
+                    lastName: form.lastName.value,
+                    age: form.age.value,
+                    email: form.email.value,
+                    singleRoleId: document.getElementById('deleteSingleRoleId' + id).value
+                })
+            });
+            document.getElementById('close-button-delete-' + id).click(); // закрываем вручную модалку
+            document.getElementById("tr_" + id).remove();
         });
     }
 
@@ -526,7 +674,7 @@
                 .then(form.reset())
                 .then(res => res.json())
                 .then(u => {
-                    let temp =
+                    document.getElementById("full").insertAdjacentHTML('beforeend',
                         `<tr id=tr_${u.id}><td>${u.id}</td>
                             <td>${u.firstName}</td>
                             <td>${u.lastName}</td>
@@ -543,9 +691,7 @@
                             class="btn btn-danger float-md-end mx-2"
                             data-bs-toggle="modal" data-bs-target="#delete${u.id}" id="delete-button-${u.id}">
                             Delete</button>
-                            </td></tr>`;
-                    document.getElementById("full").insertAdjacentHTML('beforeend',
-                        temp);
+                            </td></tr>`);
                     document.getElementById('home-tab').click();
                     document.getElementById('tr_' + u.id).scrollIntoView();
                     addingEditModal(u.id); // вызываем добавление обработчиков событий для вызова модалок на новой строчке
@@ -553,269 +699,6 @@
         });
     })();
 
-    /*
-    let ell = document.closest("tr"); // tr element (ваша строчка)
-                ell.parentElement.removeChild(ell);
-     */
-    //const myModal = new bootstrap.Modal(document.getElementById('myModal'), options);
-    /*
-    <td>
-                                                <div class="btn-toolbar">
-                                                    <form th:action="@{/admin/update/{id}(id=${user.id})}"
-                                                          th:object="${user}"
-                                                          th:method="PUT">
-                                                        <!-- Button to Edit trigger modal -->
-                                                        <button type="button" class="btn btn-primary float-md-end mx-2"
-                                                                data-bs-toggle="modal"
-                                                                th:data-bs-target="${'#edit'+user.id}">
-                                                            Edit
-                                                        </button>
-                                                        <!-- Editing Modal -->
-                                                        <div class="modal fade" th:id="${'edit'+user.id}" tabindex="-1"
-                                                             aria-labelledby="exampleModalLabel"
-                                                             aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h1 class="modal-title fs-5"
-                                                                            id="exampleModalLabel2">
-                                                                            Edit user</h1>
-                                                                    </div>
-                                                                    <div class="modal-body">
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                ID
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    disabled="disabled"
-                                                                                    name="id"
-                                                                                    th:value="*{id}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                First
-                                                                                name
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    name="firstName"
-                                                                                    th:value="*{firstName}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Last
-                                                                                name
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    name="lastName"
-                                                                                    th:value="*{lastName}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Age </strong>
-                                                                            <input
-                                                                                    type="number"
-                                                                                    min="0"
-                                                                                    name="age"
-                                                                                    th:value="*{age}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Email
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="email"
-                                                                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}"
-                                                                                    name="email"
-                                                                                    th:value="*{email}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Password
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    name="password"
-                                                                                    th:field="*{password}"
-                                                                                    class="form-control"
-                                                                                    required
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Role
-                                                                            </strong>
-                                                                            <select th:size="${roles.size()}"
-                                                                                    name="singleRoleId"
-                                                                                    class="form-control" required>
-                                                                                <option th:each="r : ${roles}"
-                                                                                        th:value="${r.getId()}"
-                                                                                        th:text="${r.getProperName()}">
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-
-                                                                    </div>
-
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">
-                                                                            Close
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Edit
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                    <form th:action="@{/admin/delete/{id}(id=${user.id})}"
-                                                          th:object="${user}"
-                                                          th:method="DELETE">
-                                                        <!-- Button to Delete trigger modal -->
-                                                        <button type="button" class="btn btn-danger float-md-end mx-2"
-                                                                data-bs-toggle="modal"
-                                                                th:data-bs-target="${'#delete'+user.id}">
-                                                            Delete
-                                                        </button>
-                                                        <!-- Deletion Modal -->
-                                                        <div class="modal fade" th:id="${'delete'+user.id}"
-                                                             tabindex="-1"
-                                                             aria-labelledby="exampleModalLabel"
-                                                             aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h1 class="modal-title fs-5"
-                                                                            id="exampleModalLabel">Are
-                                                                            you
-                                                                            sure?</h1>
-                                                                    </div>
-                                                                    <div class="modal-body">
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                ID
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    disabled="disabled"
-                                                                                    name="id"
-                                                                                    th:value="*{id}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                First
-                                                                                name
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    disabled="disabled"
-                                                                                    name="firstName"
-                                                                                    th:value="*{firstName}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Last
-                                                                                name
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    disabled="disabled"
-                                                                                    name="lastName"
-                                                                                    th:value="*{lastName}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Age </strong>
-                                                                            <input
-                                                                                    type="number"
-                                                                                    disabled="disabled"
-                                                                                    min="0"
-                                                                                    name="age"
-                                                                                    th:value="*{age}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Email
-                                                                            </strong>
-                                                                            <input
-                                                                                    type="text"
-                                                                                    disabled="disabled"
-                                                                                    name="email"
-                                                                                    th:value="*{email}"
-                                                                                    class="form-control"
-                                                                            />
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <strong class="d-flex justify-content-center">
-                                                                                Role
-                                                                            </strong>
-                                                                            <select th:size="${roles.size()}"
-                                                                                    name="singleRoleId"
-                                                                                    class="form-control"
-                                                                                    disabled="disabled">
-                                                                                <option th:each="r : ${roles}"
-                                                                                        th:value="${r.getId()}"
-                                                                                        th:text="${r.getProperName()}">
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-
-                                                                    </div>
-
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">
-                                                                            Close
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-danger">
-                                                                            Confirm
-                                                                            deletion
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </td>
-     */
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
