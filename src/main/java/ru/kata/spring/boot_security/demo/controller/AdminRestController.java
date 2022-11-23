@@ -36,8 +36,9 @@ public class AdminRestController {
         return userToCreate; // new ResponseEntity<>(userToCreate, HttpStatus.CREATED); ?
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update")
     public User updateUser(@RequestBody User UpdatedUser) {
+        System.out.println("Зашли в контроллер обновления юзера с JSON");
         userService.updateUser(UpdatedUser);
         return UpdatedUser;
     }
