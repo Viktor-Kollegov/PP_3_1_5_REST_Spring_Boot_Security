@@ -125,7 +125,7 @@
                                                             required
                                                     />
                                                 </div>
-                                                
+
                                                 <div class="form-group">
                                                     <strong class="d-flex justify-content-center"> Last name
                                                     </strong>
@@ -239,17 +239,22 @@
         </div>
     </div>
 </div>
+
 <script>
-    fetch("user/api").then(
-        res => {
-            res.json().then(
-                data => {
-                    document.getElementById('navbar-head').innerHTML = `
+    fillUsersTable();
+    addingEditModal();
+    // Заполняем шапку и изеринфо
+    (function () {
+        fetch("user/api").then(
+            res => {
+                res.json().then(
+                    data => {
+                        document.getElementById('navbar-head').innerHTML = `
                         <strong>${data.username}</strong>
                         with roles:
                         ${data.rolesAsString}`;
 
-                    document.getElementById("table").innerHTML = `
+                        document.getElementById("table").innerHTML = `
                         <tr>
                         <td>${data.id}</td>
                         <td>${data.firstName}</td>
@@ -257,42 +262,172 @@
                         <td>${data.age}</td>
                         <td>${data.email}</td>
                         <td>${data.rolesAsString}</td></tr>`;
-                }
-            )
-        }
-    )
-    fetch("admin/api/users").then(
-        res => {
-            res.json().then(
-                data => {
-                    data.forEach((u) => {
-                        document.getElementById("full").innerHTML +=
-                            `<tr id=tr_${u.id}><td>${u.id}</td>
+                    }
+                )
+            }
+        );
+    })();
+    // Заполняем таблицу
+        function fillUsersTable() {
+        fetch("admin/api/users").then(
+            res => {
+                res.json().then(
+                    data => {
+                        data.forEach((u) => {
+                            document.getElementById("full").innerHTML +=
+                                `<tr id=tr_${u.id}><td>${u.id}</td>
                             <td>${u.firstName}</td>
                             <td>${u.lastName}</td>
                             <td>${u.age}</td>
                             <td>${u.email}</td>
                             <td>${u.rolesAsString}</td>
                             <td id="actions_${u.id}">
-                            <div className="btn-toolbar">
-                            <form action="/admin/api/update/${u.id}"
-                            object="${u}" method="PUT">
+                            <div className="btn-toolbar" id="btn-toolbar-${u.id}">
                             <button type="button"
                             className="btn btn-primary float-md-end mx-2"
-                            data-bs-toggle="modal" data-bs-target="#edit${u.id}">
-                            Edit</button></form>
-                            <form action="/admin/api/delete/${u.id}" object="${u}"
-                            method="DELETE">
+                            data-bs-toggle="modal" data-bs-target="#edit${u.id}" id="edit-button-${u.id}">
+                            Edit</button>
                             <button type="button"
                             className="btn btn-primary float-md-end mx-2"
-                            data-bs-toggle="modal" data-bs-target="#delete${u.id}">
-                            Delete</button></form>
+                            data-bs-toggle="modal" data-bs-target="#delete${u.id}" id="delete-button-${u.id}">
+                            Delete</button>
                             </td></tr>`;
+                        });
                     })
-                }
-            )
-        }
-    )
+            }
+        )
+    }
+    // Динамически создаем модалку для редактирования
+    var listeners = [];
+    function addingEditModal() {
+        fetch("admin/api/users").then(
+            res => {
+                res.json().then(
+                    data => {
+                        data.forEach((u) => {
+                            listeners[u.id] = document.getElementById('edit-button-' + u.id);
+                            listeners[u.id].addEventListener('mouseover', (e) => {
+                                e.preventDefault();
+                                document.getElementById('btn-toolbar-' + u.id).innerHTML += `
+                                <form id="edit-form-${u.id}">
+                                    <div class="modal fade" id="edit${u.id}" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel2">
+                                                        Edit user</h1>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            ID
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            disabled="disabled"
+                                                            name="id"
+                                                            value="${u.id}"
+                                                            class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                             First name
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            name="firstName"
+                                                            value="${u.firstName}"
+                                                            class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Last name
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            name="lastName"
+                                                            value="${u.lastName}"
+                                                            class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Age
+                                                        </strong>
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            name="age"
+                                                            value="${u.age}"
+                                                            class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Email
+                                                        </strong>
+                                                        <input
+                                                            type="email"
+                                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}"
+                                                            name="email"
+                                                            value="${u.email}"
+                                                            class="form-control"
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Password
+                                                        </strong>
+                                                        <input
+                                                            type="text"
+                                                            name="password"
+                                                            class="form-control"
+                                                            required
+                                                        />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <strong class="d-flex justify-content-center">
+                                                            Role
+                                                        </strong>
+                                                        <select size="2"
+                                                            id="singleRoleId"
+                                                            class="form-control"
+                                                            required>
+                                                            <!--Filling via JSON-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            `;
+                            });
+                        })
+                    })
+            })
+    }
+    // Получаем роли для формы
     fetch("admin/api/roles").then(
         res => {
             res.json().then(
@@ -307,6 +442,7 @@
             )
         }
     )
+    // Сохраняем нового юзера, добавляем в таблицу, очищаем форму и перемещаемся к новой строчке
     let form = document.forms['new-user-form'];
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -335,26 +471,24 @@
                             <td>${u.email}</td>
                             <td>${u.rolesAsString}</td>
                             <td id="actions_${u.id}">
-                            <div className="btn-toolbar">
-                            <form action="/admin/api/update/${u.id}"
-                            object="${u}" method="PUT">
+                            <div className="btn-toolbar" id="btn-toolbar-${u.id}">
                             <button type="button"
                             className="btn btn-primary float-md-end mx-2"
-                            data-bs-toggle="modal" data-bs-target="#edit${u.id}">
-                            Edit</button></form>
-                            <form action="/admin/api/delete/${u.id}" object="${u}"
-                            method="DELETE">
+                            data-bs-toggle="modal" data-bs-target="#edit${u.id}" id="edit-button-${u.id}">
+                            Edit</button>
                             <button type="button"
                             className="btn btn-primary float-md-end mx-2"
-                            data-bs-toggle="modal" data-bs-target="#delete${u.id}">
-                            Delete</button></form>
+                            data-bs-toggle="modal" data-bs-target="#delete${u.id}" id="delete-button-${u.id}">
+                            Delete</button>
                             </td></tr>`;
                 document.getElementById("full").insertAdjacentHTML('beforeend',
                     temp);
                 document.getElementById('home-tab').click();
                 document.getElementById('tr_' + u.id).scrollIntoView();
-            })
+                addingEditModal(); // заново вызываем добавление обработчиков событий для вызова модалок
+            });
     });
+
     /*
     let ell = document.closest("tr"); // tr element (ваша строчка)
                 ell.parentElement.removeChild(ell);
