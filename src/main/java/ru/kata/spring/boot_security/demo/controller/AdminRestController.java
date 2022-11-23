@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -36,18 +37,21 @@ public class AdminRestController {
     }
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User userToCreate) { // ResponseEntity<User> ?
         userService.saveUser(userToCreate);
         return userToCreate; // new ResponseEntity<>(userToCreate, HttpStatus.CREATED); ?
     }
 
     @PutMapping("/update")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public User updateUser(@RequestBody User UpdatedUser) {
         userService.updateUser(UpdatedUser);
         return UpdatedUser;
     }
 
     @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public String deleteUser(@RequestBody User userToDelete, @PathVariable Long id) {
         userService.removeUser(userToDelete);
         return "Deletion user with id = " + id + " successful";

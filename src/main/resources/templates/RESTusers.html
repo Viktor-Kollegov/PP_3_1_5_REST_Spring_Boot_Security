@@ -581,9 +581,7 @@
                 .then(res => res.json())
                 .then(u => { // Удаляем старую строчку и вставляем новую
                     document.getElementById('close-button-edit-' + u.id).click(); // закрываем вручную модалку
-                    document.getElementById("tr_" + u.id).remove();
-                    let pr = u.id - 1;
-                    document.getElementById("tr_" + pr).insertAdjacentHTML('afterend',
+                    document.getElementById("tr_" + u.id).innerHTML =
                         `<tr id=tr_${u.id}><td>${u.id}</td>
                             <td>${u.firstName}</td>
                             <td>${u.lastName}</td>
@@ -600,7 +598,7 @@
                             class="btn btn-danger float-md-end mx-2"
                             data-bs-toggle="modal" data-bs-target="#delete${u.id}" id="delete-button-${u.id}">
                             Delete</button>
-                            </td></tr>`);
+                            </td></tr>`;
                     addingEditModal(u.id); // вызываем добавление обработчиков событий для вызова модалок на новой строчке
                 });
         });
