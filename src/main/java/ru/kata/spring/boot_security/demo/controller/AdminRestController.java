@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -22,39 +23,39 @@ public class AdminRestController {
     }
 
     @GetMapping("/users")
-    public List<User> getUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @GetMapping("/roles")
-    public List<Role> getRoles() {
-        return roleRepository.findAll();
+    public ResponseEntity<List<Role>> getRoles() {
+        return new ResponseEntity<>(roleRepository.findAll(), HttpStatus.OK);
     }
 
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User userToCreate) { // ResponseEntity<User> ?
+    //@ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<User> createUser(@RequestBody User userToCreate) {
         userService.saveUser(userToCreate);
-        return userToCreate; // new ResponseEntity<>(userToCreate, HttpStatus.CREATED); ?
+        return new ResponseEntity<>(userToCreate, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public User updateUser(@RequestBody User UpdatedUser) {
+    //@ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<User> updateUser(@RequestBody User UpdatedUser) {
         userService.updateUser(UpdatedUser);
-        return UpdatedUser;
+        return new ResponseEntity<>(UpdatedUser, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteUser(@RequestBody User userToDelete, @PathVariable Long id) {
+    //@ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<String> deleteUser(@RequestBody User userToDelete, @PathVariable Long id) {
         userService.removeUser(userToDelete);
-        return "Deletion user with id = " + id + " successful";
+        return new ResponseEntity<>("Deletion user with id = " + id + " successful", HttpStatus.ACCEPTED);
     }
 
 }

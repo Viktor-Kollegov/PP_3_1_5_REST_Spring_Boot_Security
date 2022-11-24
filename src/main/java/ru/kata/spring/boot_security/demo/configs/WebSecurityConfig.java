@@ -25,9 +25,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .antMatchers("/user/**").hasRole("USER")
+                .anyRequest().authenticated() // Если админ с двумя ролями - обязательная вещь, то достаточно проверять аутентифицирован ли человек, для допуска на /user, по моему скромному мнению
                 .and()
-                .csrf().disable() //  чтобы проходили не только гет запросы
+                .csrf().disable() //  чтобы проходили все запросы
                 .formLogin().successHandler(successUserHandler)
                 .permitAll()
                 .and()

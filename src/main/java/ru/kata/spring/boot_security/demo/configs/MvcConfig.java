@@ -9,7 +9,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/user").setViewName("RESTuser");
         registry.addViewController("/admin").setViewName("RESTusers");
-        //registry.addViewController("/").setViewName("login");
+        // с этим нам не нужны отдельные контроллеры для выдачи вьюшек
     }
 
 }
